@@ -6,8 +6,9 @@ We compare our approach to two recent Mask-RCNN-based amodal segmentation method
 
 
 \section{SAIL-VOS Dataset}
-The SAIL-VOS dataset consists of $160$ training and $41$ validation video sequences with $800 \times 1,280$ resolution images annotated with amodal/modal boxes and segmentation masks. 
-Following Hu~\etal~\cite{hu2019sail}, objects with occlusion rate larger than $75\%$ are excluded from training and testing. We consider two common experimental settings: the class-specific setting which focuses on a 24 class subset within the dataset, and a class-agnostic setting which disregards the class-labels and views all objects to be of a single class. 
+The SAIL-VOS dataset consists of $160$ training and $41$ validation video sequences with $800 \times 1,280$ resolution images annotated with amodal/modal boxes and segmentation masks. The dataset has $111654$ images in total; 26873 images are used for testing, and 84781 images are used for training. There are $1896295$ instances labeled in total. 
+Following Hu~\etal~\cite{hu2019sail}, objects with occlusion rate larger than $75\%$ are excluded from training and testing. We consider two common experimental settings: the class-specific setting which focuses on a 24 class subset within the dataset, and a class-agnostic setting which disregards the class-labels and views all objects to be of a single class. In the Amodal-net experiements, both settings are studied. Only the class-specific setting is studied in the experiements with reprojection.
+
 
 \section{Amodal-net Experiments}
 
@@ -49,7 +50,7 @@ My first experiment is to evaluate the gain on AP from doing reprojection. Here 
 
 My second experiment is training a small network (1x1 convolution) on the groundtruth reprojected masks from previous frames. I use one-hot encoding, so each training input has shape ($25*n$)xheightxwidth, where $25$ is the number of categories (plus 1 for back ground) and $n$ is the number of previous masks we passed in the network. The first version I trained has the masks from $t,t-1,t-2,t-3$. As one would expect, the model learned to take the groundtruth mask from $t$ directly as output, and achieved perfect accuracy. \ref{fig:w4} shows the weight that the model learned. The x-axis is the the input channels and the y-axis is the output channels. The model correctly learns to use the main diagonal primarily, correponding to using the groundtruth mask from the frame $t$. In the next version, I only passed in groundtruth masks from $t-1,t-2,t-3$ as input. As shown in \ref{fig:w3}, the weights are largest in the three diagonals as one would expect. Out of the three diagonals, the main diagonal is the largest. It is consistent with our expectation that the the most recent mask ($t-1$) is the most valuable. But it is good to see that the model is also using mask from $t-2$ and $t-3$ frames to some extent. This furthur confirms our pressumption that the reprojected masks from previous frames would help with the performance of the model. I also explored how some hyper-parameters impact the training process. Finally, I launched a training with a 3x3 convolutional network with the same parameters. It did not perform too much better than the 1x1 one. 
 
-\ref{tab:sailvos_quan} shows the quantative results of these sanity check experiments. The convolutional networks performs slightly better than directly using the groundtruth $t-1$ mask, which makes sense since that is the most recent mask. The plots \ref{fig:plot1} of the predicted mask also matches this.
+\ref{tab:sanity} shows the quantitative results of these sanity check experiments. The convolutional networks performs slightly better than directly using the groundtruth $t-1$ mask, which makes sense since that is the most recent mask. The plots \ref{fig:plot1} of the predicted mask also matches this.
 
 \begin{figure}
 \centering
@@ -75,7 +76,7 @@ My second experiment is training a small network (1x1 convolution) on the ground
 
 
 \section{Experiment with Reprojection}
-In the main experiment, I implemented the reprojection in feature space. As shown in \ref{fig:pipeline}, the main part I added is the red part. In the dataloader, I added the depth map of the images and the camera matrices in addition to the images theselves. Then in the network, I added a layer that reproject the feature from one frame to another the same way I described in the previous section. In the implementation, I had to change the reprojection code a little to accomodate reprojection in the feature space. Since it is of a lower resolution, I needed to downsample the depth map. I tried a few difference modes of resizing to get the minimum amount of the aliasing effect. I found at the end the just using the nearest performs the best. 
+In the main experiment, I implemented the reprojection in feature space. As shown in \ref{fig:pipeline}, the main part I added is annotated in red. In the dataloader, I added the depth map of the images and the camera matrices in addition to the images theselves. Then in the network, I added a layer that reproject the feature from one frame to another as in \ref{chp:approach}. In the implementation, I had to change the reprojection code a little to accomodate reprojection in the feature space instead of image. Since it is of a lower resolution, I needed to downsample the depth map. I tried a few difference modes of resizing to get the minimum amount of the aliasing effect. I found at the end the just using the nearest performs the best. 
 
+The 
 
-[TODO]

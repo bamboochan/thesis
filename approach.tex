@@ -24,6 +24,9 @@ a propagation of object observations which is often too short-sighted. Amodal-ne
 better adjusts to overlapping detection boxes by using a cascade architecture with  Soft-NMS, 
 and {\bf (iii)} a mask-head with increased receptive field and self-attention to propagate observations more broadly. Each of these components addresses the corresponding  challenge. 
 
+One challenge in amodal box prediction is that it requires reasoning about the object size and shape despite occlusions. Importantly, different from the modal setting, an amodalbox’s ground-truth more frequently overlaps with boxes de-lineating other detected objects. \ref{fig:sailvos_iou_hist} verifies this observation. To avoid non-maximum suppresion from removing boxes incorrectly due to heavier occlusion, cascaded soft NMS is used.
+
+\input{fig_sailvos_hist.tex}
 
 
 \section{3D Reprojection}
@@ -59,3 +62,14 @@ In the network, we use the same algorithm but perform reprojection on the featur
 \caption{Image from SAILVOS dataset video \text{tonya\_concat\_1} frame 270 and 271. The third figure is the result of reproject frame 270 to the view of 271. We can see that the camera moved left from frame 270 to 271, which is reflected in the reprojected image.}
 \label{fig:reproj_image}
 \end{figure}
+
+\section{Implementation Details}
+%Our implementation follows the same set of hyperparameters in~\cite{he2017mask} based on the implementation in Detectron2~\cite{wu2019detectron2}. %\as{doesn't this sentence diminish; formulate better}   More specifically, we use the setup of
+We use
+ResNet50~\cite{he2016deep} with FPN~\cite{lin2017feature} backbone for all experiments. 
+For initialization, we use the COCO pre-trained weights with the standard $1\times$ training schedule. 
+%\ray{TODO: describe how to initialize the Segmentation and amodal branch.}
+All layers introduced in our approach are randomly initialized following Kaiming initialization~\cite{he2015delving}.  %and train them on the corresponding Amodal dataset using SGD with momentum. 
+%
+All models are trained using SGD with momentum and a default data-augmentation from Detectron2~\cite{wu2019detectron2}, which includes random horizontal flipping and re-sizing of the images. We extract optical flow using LiteFlowNet2~\cite{hui2020lightweight}.
+For Soft-NMS~\cite{bodla2017soft}, we use the linear weighting scheme for all the cascaded box iterations during training. At test-time, we use a test-threshold of $0.3$ for all stages of the box prediction.
