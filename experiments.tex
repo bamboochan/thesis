@@ -1,0 +1,81 @@
+\section{Metrics and Baseline}
+
+To evaluate amodal segmentation, we report the commonly used average precision (AP) averaged over IoU thresholds from $50\%$ to $95\%$. We also report AP with an IoU threshold of 50\%, \ie, $\text{AP}_{50}$. To further study the results, we compute a range of   metrics, including $\text{AP}_{\text{50}}^{\text{P}}$ and  $\text{AP}_{\text{50}}^{\text{H}}$. Both report the $\text{AP}_{50}$ using a subset of instances containing (P)artial ($<25\%$) or (H)eavy ($\geq25\%$) occlusions. Similarly, we also report across different instance sizes, $\text{AP}_{\text{50}}^{\text{L}}$, $\text{AP}_{\text{50}}^{\text{M}}$, and $\text{AP}_{\text{50}}^{\text{S}}$ which correspond to pixel area of (L)arge ($\geq 96^2$), (M)edium ($[32^2, 96^2]$), and (S)mall ($\leq 32^2$)  box areas respectively. 
+
+We compare our approach to two recent Mask-RCNN-based amodal segmentation methods, {\it MaskAmodal}~\cite{follmann2019learning}  and {\it MaskJoint}~\cite{hu2019sail}. MaskAmodal directly trains the  Mask-RCNN on the task of amodal mask prediction. Differently, MaskJoint learns both amodal and model mask prediction simultaneously by introducing another mask-head into Mask-RCNN.
+
+
+\section{SAIL-VOS Dataset}
+The SAIL-VOS dataset consists of $160$ training and $41$ validation video sequences with $800 \times 1,280$ resolution images annotated with amodal/modal boxes and segmentation masks. 
+Following Hu~\etal~\cite{hu2019sail}, objects with occlusion rate larger than $75\%$ are excluded from training and testing. We consider two common experimental settings: the class-specific setting which focuses on a 24 class subset within the dataset, and a class-agnostic setting which disregards the class-labels and views all objects to be of a single class. 
+
+\section{Amodal-net Experiments}
+
+We report quantitative results in~\tabref{tab:sailvos_quan}. 
+%On the SAIL-VOS dataset, we 
+% and compared with state-of-the-art method of~\cite{hu2019sail}. 
+All the results are reported using $T = 2$ frames. We also experimented with larger history. However, results did not change compared to using two frames. We suspect that usefulness of optical flow degrades as the history increases. %\as{don't forget to bold all columns}
+
+As shown in \tabref{tab:sailvos_quan},Amodal-net outperforms baselines~\cite{hu2019sail} by $3.5\%$ AP in the class-specific setting and by $3.6\%$ %{\bf\color{orange}3.6 is right?(40.8 to 43.8) 3.0?}\ray{That's AP50}
+AP in the class-agnostic setting. We also observe gains on the other metrics except for $\text{AP}_{\text{50}}^{\text{H}}$ in the class-agnostic setting. These results validate that the proposed backbone and the box/mask-head tailored for amodal segmentation are effective and improve results.
+
+
+We provide qualitative results in~\figref{fig:qual_result}. Note that our approach successfully predicts the amodal mask despite occlusions. 
+In column 1, half of the person is occluded by a table. The model correctly infers the lower half of the person. In column 2, our approach correctly predicts the overlapping amodal boxes, inferring a car and a person.
+In column 3, we successfully segment  the entire motorcycle, propagating information `through' the person.
+In column 4, the segmentations of the laptop and person correctly maintain their corresponding boundaries.   
+%In contrast, the baseline suffers from duplicate detections, \eg, the second column, and challenges with the amodal segmentation. 
+%For example, 
+%In column three, the motorcycle is not fully segmented, or in column four, where the segmentation of the laptop and person mixes. 
+%\as{make this paragraph stronger; relate it back to the three issues explained in the intro; don't emphasize what goes wrong in prior work but what our method does better; don't trash others, emphasize ours} %\as{order columns (left to right) to match discussion}
+
+
+
+Next, we conduct an ablation study to assess the merits of the proposed components.  \tabref{tab:abalation} shows that each of the proposed components leads to improvements in the amodal mask's AP.
+In row 2, we validated that multi-task training with occlusion annotations (\secref{subsec:multi_task_training}) is beneficial. 
+%In row 2, we observe that using and additional occlusion branch is beneficial. 
+To experiment with different numbers of mask layers, we freeze the box-branch and only train the amodal mask.
+In row 3 and 4, we observe that using nine mask layers achieves the best results and adding more layers doesn't improve further. In row 5, we validated that the use of flow (\secref{sec:temporal}) is effective. 
+In row 6 and 7, we see that the cascade box regression along with Soft-NMS (\secref{sec:bbox}) leads to improvements in box AP. Lastly, in row 8, further refinement with mask iterations (\secref{sec:segm}) also improves the amodal segmentation's accuracy.
+
+
+
+
+
+\section{Sanity Check Experiments}
+Before add reprojection to the network, I conducted some sanity check experiments to evaluate the effect of reprojection and catch any mistake there is. 
+
+My first experiment is to evaluate the gain on AP from doing reprojection. Here are the quantative results in table 1. The first three lines are from my previous project on this. The last four lines are the evaluation of using groundtruth masks from $t-1$ or $t-2$ as prediction, with or without reprojection. As one would expect, the accuracy of the lines that is using reprojection is higher, confirming our pressumption that reprojection should allows us to use 3D and temporal information better. But obviously these lines are using modified version of groundtruth masks, so it is not comparable to the first three lines. The final goal of this project would be to incorporate this reprojected information into training pipeline to get numbers better than the third line.
+
+My second experiment is training a small network (1x1 convolution) on the groundtruth reprojected masks from previous frames. I use one-hot encoding, so each training input has shape ($25*n$)xheightxwidth, where $25$ is the number of categories (plus 1 for back ground) and $n$ is the number of previous masks we passed in the network. The first version I trained has the masks from $t,t-1,t-2,t-3$. As one would expect, the model learned to take the groundtruth mask from $t$ directly as output, and achieved perfect accuracy. \ref{fig:w4} shows the weight that the model learned. The x-axis is the the input channels and the y-axis is the output channels. The model correctly learns to use the main diagonal primarily, correponding to using the groundtruth mask from the frame $t$. In the next version, I only passed in groundtruth masks from $t-1,t-2,t-3$ as input. As shown in \ref{fig:w3}, the weights are largest in the three diagonals as one would expect. Out of the three diagonals, the main diagonal is the largest. It is consistent with our expectation that the the most recent mask ($t-1$) is the most valuable. But it is good to see that the model is also using mask from $t-2$ and $t-3$ frames to some extent. This furthur confirms our pressumption that the reprojected masks from previous frames would help with the performance of the model. I also explored how some hyper-parameters impact the training process. Finally, I launched a training with a 3x3 convolutional network with the same parameters. It did not perform too much better than the 1x1 one. 
+
+\ref{tab:sailvos_quan} shows the quantative results of these sanity check experiments. The convolutional networks performs slightly better than directly using the groundtruth $t-1$ mask, which makes sense since that is the most recent mask. The plots \ref{fig:plot1} of the predicted mask also matches this.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.1]{fig/weights_4.png}
+\caption{Weight that the model learned. Input is gt masks from t,t-1,t-2,t-3}
+\label{fig:w4}
+\end{figure}
+\begin{figure}
+\centering
+\includegraphics[scale=0.12]{fig/weights_3.png}
+\caption{Weight that the model learned. Input is gt masks from t,t-1,t-2,t-3}
+\label{fig:w3}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.23]{fig/pred.png}
+\caption{gt mask, t-1 mask, t-2 mask,t-3 mask and predicted mask. The prediction is from 1x1 conv network that is trained without gt}
+\label{fig:plot1}
+\end{figure}
+
+\input{tab_sanitycheck}
+
+
+\section{Experiment with Reprojection}
+In the main experiment, I implemented the reprojection in feature space. As shown in \ref{fig:pipeline}, the main part I added is the red part. In the dataloader, I added the depth map of the images and the camera matrices in addition to the images theselves. Then in the network, I added a layer that reproject the feature from one frame to another the same way I described in the previous section. In the implementation, I had to change the reprojection code a little to accomodate reprojection in the feature space. Since it is of a lower resolution, I needed to downsample the depth map. I tried a few difference modes of resizing to get the minimum amount of the aliasing effect. I found at the end the just using the nearest performs the best. 
+
+
+[TODO]

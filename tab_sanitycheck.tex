@@ -1,0 +1,60 @@
+%!TEX root = ../main.tex
+\begin{table*}[t]
+%\small
+\centering
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{0.95}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}c|cccccccc}
+\specialrule{.15em}{.05em}{.05em}
+ %@{\extracolsep{\fill}}
+& \multicolumn{7}{c}{\bf SAIL-VOS class-specific} &  \\
+Method & AP &  $\text{AP}_{\text{50}}$ & $\text{AP}_{\text{50}}^{\text{P}}$ & $\text{AP}_{\text{50}}^{\text{H}}$ & $\text{AP}_{\text{50}}^{\text{L}}$ & $\text{AP}_{\text{50}}^{\text{M}}$ & $\text{AP}_{\text{50}}^{\text{S}}$ 
+
+\\
+\hline\hline
+MaskAmodal~ & 
+13.0 & 23.0 & 24.3 & 16.7 & 36.6 & 21.5 & 6.1 & \\% Class-specific
+
+%40.4 & 26.6\\
+
+MaskJoint~\cite{hu2019sail} &
+14.1 & 24.8 & 24.3 & 18.9 & 37.8 & 21.5 & 5.7 & \\  % Class-specific
+
+Best model (Base model) & 
+\bf 17.6 & \bf 28.3 &  \bf 28.9 & \bf 20.1 &  \bf 47.1 & \bf 24.8 & \bf 10.6& \\% Class-Agnostic
+
+\hline
+Gt t-1 frame w/o reprojection & 
+ - &  61.7 &   53.6 &  50.5 &   - & - & -& \\ % Class-Agnostic
+
+
+Gt t-1 frame w reprojection & 
+\bf - & \bf 69.3 &  \bf 61.8 & \bf 58.0 &  \bf - & \bf - & \bf -& \\
+
+Gt t-2 frame w/o reprojection & 
+ - &  50.4 &  43.3 & 37.7 &  - &  - &  -& \\
+
+Gt t-2 frame w reprojection & 
+\bf - & \bf 64.5 &  \bf 56.7 & \bf 51.8 &  \bf - & \bf - & \bf -& \\
+
+
+Gt t-2 frame w reprojection & 
+ - &  64.5 &   56.7 &  51.8 &  - &  - &  -& \\
+
+1x1 Conv w/ gt t,t-1,t-2, t-3 frames w reprojection &
+- &  99.9 &   99.9 &  99.9 &  - &  - &  -& \\
+
+1x1 Conv w/ gt t-1,t-2, t-3 frames w reprojection &
+- &  69.4 &   61.9 &  58.2 &  - &  - &  -& \\
+
+3x3 Conv w/ gt t-1,t-2, t-3 frames w reprojection &
+- &  69.4 &   61.8 &  58.4 &  - &  - &  -& \\
+\specialrule{.15em}{.05em}{.05em}
+\end{tabular*}
+\vspace{-0.3cm}
+\caption{Quantitative amodal segmentation results for the SAIL-VOS dataset using class-specific and class-agnostic settings.
+%\ray{Class-agnostic heavy needs some tunining?}
+}
+\vspace{-0.45cm}
+\label{tab:sanity}
+\end{table*}

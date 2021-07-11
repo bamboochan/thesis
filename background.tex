@@ -1,0 +1,31 @@
+%!TEX root = main.tex
+In this chapter I will breifly review relevant concepts. First I will review works on instance segmentation, which are often a source of inspiration for amodal methods.
+Subsequently I will discuss amodal segmentation. Lastly, I will review network architectures for extracting features from videos in other tasks, which serves as an inspiration for temporal data. 
+\section{Instance Segmentation}
+
+Instance segmentation is a long-standing goal in computer vision that requires the prediction of object instances and their per-pixel segmentation mask. This makes it a hybrid of semantic segmentation and object detection.
+~\cite{BarinovaPAMI2012, RiemenschneiderECCV2012, KimCVPR2012, PinheiroNIPS2015, DaiCVPR2016, PinheiroECCV2016, DaiECCV2016, LiCVPR2017, liu2018path, fang2019instaboost, yolacticcv2019, lee2020centermask, Cao_D2Det_CVPR_2020, wang2020solo}.[TODO: maybe add more bg in instance segm and a picture that compares it with semestic segm] 
+
+Mask-RCNN-based methods have shown strong results on instance segmentation~\cite{he2017mask, cai2018cascade, liu2018path, chen2019hybrid}. These detect-then-segment methods first extract image features via a backbone network, \eg, a ResNet. A Region Proposal Network (RPN)~\cite{ren2015faster} subsequently retrieves a set of candidate bounding boxes and their objectness scores. This is achieved by sliding a small convolutional network over the features extracted via the  backbone network. 
+
+These candidates may  heavily overlap with each other. %, therefore 
+To reduce redundant computation due to the overlap, Non-Maximum Suppression (NMS) or its soft-version Soft-NMS~\cite{bodla2017soft} is applied to filter   candidates. 
+
+Given the candidate bounding boxes,  ROIAlign~\cite{he2017mask} is used to extract a feature map for each of the candidate boxes. The bounding box features are subsequently processed by a box-head and/or a mask-head, which regress to bounding box and segmentation mask respectively. The box-head consists of fully connected layers and yields a classification prediction and a  corresponding bounding box.  %the bounding box size and its location. 
+The mask-head consists of a stack of convolutional layers, which yield a $28 \times 28$ class-specific mask. 
+
+Variants of Mask-RCNN rely on a multi-stage refinement approach, \ie, a cascade is used to enhance the box-prediction accuracy~\cite{cai2018cascade, chen2019hybrid}. While our method also relies on a cascade design, our model is specifically designed for the task of SAIL-VOS. Different from these works, we propose a temporal backbone to aggregate information over time, Soft-NMS to handle overlapping amodal boxes, and an iterative mask-head with attention to propagate information into occluded regions. 
+
+\section{Amodal Image/Instance Segmentation.}
+Amodal instance segmentation is the task to delineate objects and their occluded parts in video or image data. The goal is to predict a mask for every object that is in the image, and the mask would draw out the whole object includding any part that may be occluded. 
+
+Annotations for amodal segmentation are challenging to obtain due to  ambiguities caused by  occlusions. Early works~\cite{GuoECCV2012, GuptaCVPR2013, SilbermanECCV2014b, KarICCV2015} view the problem as a contour completion task. Other works~\cite{HsiaoCVPR2012, PepikCVPR2013, GhiasiCVPR2014, ChenCVPR2015, LiECCV2016}  formulate the problem as occlusion reasoning from a single image. Generally, the focus is on the class-agnostic setting, where the predicted segmentation consists of only two classes, either foreground or background. Maire \etal~\cite{maire2013hierarchical} collect one of the earliest datasets for amodal segmentation, labeling 100 images. %}
+%\as{citations missing, e.g. Li and Malik; check Sail-VOS paper}
+
+More recently, datasets with class annotations were released. For instance, Zhu~\etal~\cite{zhu2017semantic} introduce the COCO-A dataset, which adds amodal annotations to 5000  images from the COCO dataset~\cite{lin2014microsoft}. Even more recently, larger datasets for amodal segmentation have been collected. For example, Qi~\etal~\cite{qi2019amodal} collect amodal annotations for the KITTI dataset~\cite{geiger2012we}. Concurrently, Hu~\etal~\cite{hu2019sail} propose to use a game engine to automatically collect realistic  annotations for amodal segmentation of video data. The use of a game engine circumvents any accuracy concerns for amodal annotation, which is %commonly
+challenging to obtain due to ambiguity. It hence avoids labor-intensive human labeling. Work by Hu \etal~\cite{hu2019sail} further enables to train and evaluate amodal instance segmentation on videos, \ie, the task of SAIL-VOS. Based on these datasets, Mask-RCNN-based methods for single image instance segmentation have been proposed~\cite{follmann2019learning, hu2019sail}. More specifically, Follman \etal~\cite{follmann2019learning} discuss a two mask-head approach, which yields the amodal mask, the modal mask, and a combination of both results to form the occlusion mask for end-to-end training on all three masks. Hu \etal~\cite{hu2019sail} propose to jointly train the amodal and modal mask. Different from these works, we consider input of videos and specifically design an architecture to address prevalent challenges for the task of SAIL-VOS.
+
+
+\section{Video and Reprojection Architectures}
+Capturing temporal information is also crucial for tasks involving any form of video understanding, \eg, video segmentation, recognition, inpainting, \etc. There are various methods to align features from different timestamps.For example, optical flow has been used as an additional deep-net input for video action recognition~\cite{simonyan2014two, singh2016first}. Other methods incorporate optical flow by warping images or features, aligning them to the current frame of interest~\cite{hu2017maskrnn,gadde2017semantic, kim2019deep}.In my previous work with Yeh, similar flow-based method was incorporated into the net. Differently from those methods, in this thesis we will use reprojection in the net for alignment.
+[TODO: have a few more sentences on reprojection]
