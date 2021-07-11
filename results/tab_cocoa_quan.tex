@@ -1,0 +1,37 @@
+%!TEX root = ../main.tex
+\begin{table*}[t]
+%\small
+\centering
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{0.95}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}c|cccccccc|ccccccc}
+\specialrule{.15em}{.05em}{.05em}
+ %@{\extracolsep{\fill}}
+& \multicolumn{7}{c}{\bf COCO-A class-specific} & & \multicolumn{7}{c}{\bf COCO-A class-agnostic} \\
+Method & AP &  $\text{AP}_{\text{50}}$ & $\text{AP}_{\text{50}}^{\text{P}}$ & $\text{AP}_{\text{50}}^{\text{H}}$ & $\text{AP}_{\text{50}}^{\text{L}}$ & $\text{AP}_{\text{50}}^{\text{M}}$ & $\text{AP}_{\text{50}}^{\text{S}}$ 
+&&
+AP & $\text{AP}_{\text{50}}$ & $\text{AP}_{\text{50}}^{\text{P}}$ & $\text{AP}_{\text{50}}^{\text{H}}$ & $\text{AP}_{\text{50}}^{\text{L}}$ & $\text{AP}_{\text{50}}^{\text{M}}$ & $\text{AP}_{\text{50}}^{\text{S}}$ 
+\\
+\hline\hline
+MaskAmodal~\cite{follmann2019learning} &
+37.1 & 54.4 & 55.5 & 18.2 & 65.0 & 51.6 & 42.0 & & % Class-specific
+31.4 & 57.2 & 62.7 & 25.0 & 65.1 & 54.4 & 33.5\\
+ 
+MaskJoint~\cite{hu2019sail} &
+37.4 & 54.2 & 55.7 & 18.0 & 65.3 & 51.7 & 42.2 & & % Class-specific
+31.5 & 57.3 & 62.8 & 25.6 & 65.5 & 54.5 & 32.1 \\
+ 
+Ours &
+\bf 41.7 & \bf 58.2 & \bf 60.0 & \bf 19.5 & \bf 67.6 & \bf 55.7 & \bf 42.3 & & % Class-specific
+\bf 35.5 & \bf 60.4 & \bf 65.8 & \bf 25.8 & \bf 69.8 & \bf 56.9 & \bf 34.4\\
+
+\specialrule{.15em}{.05em}{.05em}
+\end{tabular*}
+\vspace{-0.3cm}
+\caption{Quantitative results on COCO-A dataset for class-specific and class-agnostic amodal segmentation.
+}
+\label{tab:cocoa_quan}
+\vspace{-0.2cm}
+\end{table*}
+
+

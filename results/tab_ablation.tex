@@ -1,0 +1,41 @@
+%!TEX root = ../main.tex
+\begin{table*}[t]
+\centering
+\renewcommand{\arraystretch}{0.95}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}c|ccccccccc}
+\specialrule{.15em}{.05em}{.05em}
+Row \# & Method &  Occlude & Flow & \# Mask Layers & Cascade & Soft-NMS & Mask Iter. & Box AP & Mask AP\\
+\hline\hline
+%MaskAmodal~\cite{follmann2019learning} & \xmark & \xmark & 4 & \xmark & \xmark & \xmark & - & 13.0\\ 
+%MaskJoint~\cite{hu2019sail} & \xmark & \xmark & 4 & \xmark & \xmark & \xmark & - & 14.1\\
+1 & MaskJoint~\cite{hu2019sail} & \xmark&  \xmark & 4 & \xmark & \xmark  & \xmark & - & 14.1\\
+2 & Ours & \cmark & \xmark & 4 & \xmark & \xmark  & \xmark & 16.4 & 14.6\\
+\hline 
+3 & Ours & \cmark & \xmark & 9 &\xmark  & \xmark & \xmark & 16.4  & 15.4\\
+4 & Ours & \cmark & \xmark & 10 &\xmark  & \xmark & \xmark &  16.4 & 15.3\\
+\hline
+5 & Ours & \cmark & \cmark & 9 &\xmark  & \xmark & \xmark &  17.5 & 16.3 \\
+\hline 
+6 & Ours & \cmark & \cmark & 9 &\cmark  & \xmark & \xmark &  18.6 & 16.7 \\
+7 & Ours & \cmark & \cmark & 9 &\cmark  & \cmark & \xmark &   19.6 & 17.3\\
+8 & Ours & \cmark & \cmark & 9 &\cmark  & \cmark & \cmark &  \bf 19.6 & \bf 17.6\\
+%\cite{hu2019sail} & \xmark & \xmark & - & 13.0 & - & -\\
+
+%\hline
+%Ours & \xmark & \xmark &  16.24 & 14.15 & - & - \\
+%Ours & \cmark & \cmark &   16.40 & 14.58 & 14.47 & 1.502\\
+%\hline
+%Ours+6conv. & \xmark & \xmark &  16.26 & 14.90 & - & -\\
+%Ours+6conv. & \cmark & \cmark & 16.40  & 15.39 & 14.98 & 2.002\\
+%Ours+5conv. & \cmark & \cmark & 16.40  & 15.39 & 14.98 & 2.002\\
+%\hline
+%Ours+5conv.+flow+soft\_nms & \cmark & \cmark & \bf 17.47 & \bf 16.25 & \bf 15.82 & \bf 2.079\\
+\specialrule{.15em}{.05em}{.05em}
+\end{tabular*}
+\vspace{-0.3cm}
+\caption{Ablation study for each of the proposed components on the SAIL-VOS dataset using the class-specific setting.}
+\label{tab:abalation}
+\vspace{-0.5cm}
+\end{table*}
+
+
