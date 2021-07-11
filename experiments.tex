@@ -1,3 +1,5 @@
+\input{fig_qual_results}
+
 \section{Metrics and Baseline}
 
 To evaluate amodal segmentation, we report the commonly used average precision (AP) averaged over IoU thresholds from $50\%$ to $95\%$. We also report AP with an IoU threshold of 50\%, \ie, $\text{AP}_{50}$. To further study the results, we compute a range of   metrics, including $\text{AP}_{\text{50}}^{\text{P}}$ and  $\text{AP}_{\text{50}}^{\text{H}}$. Both report the $\text{AP}_{50}$ using a subset of instances containing (P)artial ($<25\%$) or (H)eavy ($\geq25\%$) occlusions. Similarly, we also report across different instance sizes, $\text{AP}_{\text{50}}^{\text{L}}$, $\text{AP}_{\text{50}}^{\text{M}}$, and $\text{AP}_{\text{50}}^{\text{S}}$ which correspond to pixel area of (L)arge ($\geq 96^2$), (M)edium ($[32^2, 96^2]$), and (S)mall ($\leq 32^2$)  box areas respectively. 
