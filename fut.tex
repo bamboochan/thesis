@@ -1,1 +1,13 @@
-One of the possible directions for future work is to incorporate multiple reprojected frames in the training pipeline, in order to even better capture temporal information from the video. Another possibility is to incorporate the depth information directly in the tratining as opposed to using it just for reprojection, since depth information could be helpful in separating occluded objects. These directions would probably require some new approaches to storing and loading the data, in order to accomodate increasing amount of data in the training pipeline.
+One of the possible directions for future work is to incorporate multiple reprojected frames in the training pipeline, 
+in order to even better capture temporal information from the video. 
+Another possibility is to incorporate the depth information directly into the training as opposed to using it just for reprojection, 
+since depth information could be helpful in separating occluded objects.
+The SAIL-VOS dataset currently contains ?GB of images, which results in training time of 12 hours with 40000 iterations using 4 GPUs.
+Adding the depth data into training and increasing the time horizon of reprojected frames would increase both the total size
+of the training data and the amount of data loaded into the GPU for each training example.
+Therefore these directions would probably require some new approaches to storing and loading the data, 
+in order to accomodate the increasing amounts of data in the training pipeline. One possible optimization would be to 
+remove the duplicate loading of images arising from the intersecting temporal segments: the instance of frame 
+$t$ loads frames $t, t-1, \ldots, t-k$ and the instance of frame $t-1$ loads frames $t-1, t-2, \ldots, t-k-1$, resulting in frames
+$t-1, \ldots, t-k$ loaded twice.
+
