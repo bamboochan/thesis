@@ -74,7 +74,7 @@ In the network, we use the same algorithm but perform reprojection on the featur
 We use
 ResNet50~\cite{he2016deep} with FPN~\cite{lin2017feature} backbone for all experiments. 
 For initialization, we use the COCO pre-trained weights with the standard $1\times$ training schedule. 
-%\ray{TODO: describe how to initialize the Segmentation and amodal branch.}
+
 All layers introduced in our approach are randomly initialized following Kaiming initialization~\cite{he2015delving}.  %and train them on the corresponding Amodal dataset using SGD with momentum. 
 %
 All models are trained using SGD with momentum and a default data-augmentation from Detectron2~\cite{wu2019detectron2}, which includes random horizontal flipping and re-sizing of the images. We extract optical flow using LiteFlowNet2~\cite{hui2020lightweight}.

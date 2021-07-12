@@ -1,0 +1,5 @@
+We explore approaches to improve over existing amodal prediction models for the task of semantic amodal instance level video object segmentation, \ie, the task to delineate  objects and their occluded parts in video data. We propose Amodal-net with three improvements: First, we leverage temporal information. Specifically, we employ 3D convolutions and a flow alignment module which permits to aggregate the objects' features across frames. Second, we develop a cascaded box-head with  soft-non-maximum-suppression %in order
+to address the challenge that amodal segmentations overlap significantly. %Second, we address the challenge that amodal segmentations  overlap significantly. For this we develop a cascaded box-head with soft-non-maximum-suppression. 
+Third, we address the challenge that occlusions require observation information to be propagated over larger distances by developing an attention-based mask-head. Then we also study reprojection, another way of using temporal information which also uses 3D information.
+%For this we develop an attention-based mask-head.
+We evaluate our approach on amodal segmentation for video data, SAILVOS. 
