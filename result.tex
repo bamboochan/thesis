@@ -1,3 +1,12 @@
-
-
+Training 25k iterations with a learning rate of 0.0002 gives us the following quantative result:
 \input{tab_quan}
+
+Reprojection achieves better result for small objects, as it achieves $0.2$ AP higher than training without reprojection. But in general, the two versions achieved similar results \ref{fig:ap}. 
+
+If we look at the metrics per class, we can see that training with reprojection performs better for objects that are small and still \eg box and bin \ref{fig:ap_bin}. But for object that moves \eg person \ref{fig:ap_person}, it performs worse than the training without reprojection. 
+
+[TODO: exlain more here]
+[TODO: add qualiatative result here]
+[TODO: ablation study for hyperparameters]
+\input{fig_ap}
+ 
