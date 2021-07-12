@@ -4,10 +4,10 @@ One reason could be the distribution of objects in SAILVOS dataset. As shown in 
 
 \begin{figure}[t]
 \centering
-\includegraphics[scale=0.4]{fig/sailvos_cls_dist.png}
+\includegraphics[scale=0.23]{fig/sailvos_cls_dist.png}
 
 \caption{The number of instances per class in the proposed SAIL-VOS dataset. There are 162 semantic classes in total. These 162 classes are remaped to 24 COCO classes in our experiments. }
 \label{fig:sailvos_cls}
 \end{figure}
 
-Another limitation is data augmentation. Experiments for Amodal-net was using augmentations such as random flip. But random flip is not compatible with reprojeciton because the camera matrices and depth map that is used in reprojection is 
+Another limitation is data augmentation. Experiments for Amodal-net was using augmentations such as random flip. But random flip is not compatible with reprojeciton because the camera matrices and depth map that is used in reprojection will not be correct if the image is flipped. This challenge can be solved if we modify the depth and camera metrices when flip is used, but this is not explored in this thesis due to the complications in implementation.
