@@ -16,9 +16,12 @@ More specifically, our temporal backbone enables the model to reason about occlu
 
 Recently, Hu~\etal~\cite{HuCVPR2021} also collected detailed 3D information on SAIL-VOS. Intuitively, 3D information combined with temporal information will offer more clue for objects and their occlusion. Therefore, this thesis explores the effect of adding 3D information to the video data.  In particular, the model will incorporate depth map and camera intrinsic and extrinsic matrices into the input, and perform 3D reprojection in the feature space.
 
-%TODO
-[TODO: modify the result section and add new result]
+
 We evaluate our approach on the SAIL-VOS dataset~\cite{hu2019sail}, where we outperform state-of-the-art by $3.5\%$ (absolute-gain) in Average Precision (AP) on amodal video instance segmentation. 
+We also investigate the effect of reprojection on the accuracy of our model on the SAIL-VOS dataset. Compared to the repreojection-less 
+model, adding reprojection yields a minor improvemenet in AP, as well as a more significant improvement of $0.2$ when restricted to small 
+objects.
+
 %In order to extend our proposed methods into the standard amodal instance segmentation task and 
 Next, to assess the generality of \textit{non-temporal} components in the base model,
 %To the best of our knowledge, %~\cite{hu2019sail} 
