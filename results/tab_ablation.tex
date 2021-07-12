@@ -2,6 +2,7 @@
 \begin{table*}[t]
 \centering
 \renewcommand{\arraystretch}{0.95}
+\scalebox{0.8}{
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}c|ccccccccc}
 \specialrule{.15em}{.05em}{.05em}
 Row \# & Method &  Occlude & Flow & \# Mask Layers & Cascade & Soft-NMS & Mask Iter. & Box AP & Mask AP\\
@@ -31,7 +32,7 @@ Row \# & Method &  Occlude & Flow & \# Mask Layers & Cascade & Soft-NMS & Mask I
 %\hline
 %Ours+5conv.+flow+soft\_nms & \cmark & \cmark & \bf 17.47 & \bf 16.25 & \bf 15.82 & \bf 2.079\\
 \specialrule{.15em}{.05em}{.05em}
-\end{tabular*}
+\end{tabular*}}
 \vspace{-0.3cm}
 \caption{Ablation study for each of the proposed components on the SAIL-VOS dataset using the class-specific setting.}
 \label{tab:abalation}
