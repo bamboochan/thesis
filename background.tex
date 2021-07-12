@@ -4,7 +4,7 @@ Subsequently I will discuss amodal segmentation. Lastly, I will review network a
 \section{Instance Segmentation}
 
 Instance segmentation is a long-standing goal in computer vision that requires the prediction of object instances and their per-pixel segmentation mask. This makes it a hybrid of semantic segmentation and object detection.
-~\cite{BarinovaPAMI2012, RiemenschneiderECCV2012, KimCVPR2012, PinheiroNIPS2015, DaiCVPR2016, PinheiroECCV2016, DaiECCV2016, LiCVPR2017, liu2018path, fang2019instaboost, yolacticcv2019, lee2020centermask, Cao_D2Det_CVPR_2020, wang2020solo}.[TODO: maybe add more bg in instance segm and a picture that compares it with semestic segm] 
+~\cite{BarinovaPAMI2012, RiemenschneiderECCV2012, KimCVPR2012, PinheiroNIPS2015, DaiCVPR2016, PinheiroECCV2016, DaiECCV2016, LiCVPR2017, liu2018path, fang2019instaboost, yolacticcv2019, lee2020centermask, Cao_D2Det_CVPR_2020, wang2020solo}.
 
 Mask-RCNN-based methods have shown strong results on instance segmentation~\cite{he2017mask, cai2018cascade, liu2018path, chen2019hybrid}. These detect-then-segment methods first extract image features via a backbone network, \eg, a ResNet. A Region Proposal Network (RPN)~\cite{ren2015faster} subsequently retrieves a set of candidate bounding boxes and their objectness scores. This is achieved by sliding a small convolutional network over the features extracted via the  backbone network. 
 

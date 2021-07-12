@@ -26,14 +26,14 @@ In row 2, we validated that multi-task training with occlusion annotations is be
 To experiment with different numbers of mask layers, we freeze the box-branch and only train the amodal mask.
 In row 3 and 4, we observe that using nine mask layers achieves the best results and adding more layers doesn't improve further. In row 5, we validated that the use of flow is effective. 
 In row 6 and 7, we see that the cascade box regression along with Soft-NMS leads to improvements in box AP. Lastly, in row 8, further refinement with mask iterations also improves the amodal segmentation's accuracy.
-
+\input{fig_qual_results}
+\input{results/tab_ablation.tex}
 
 
 \section{Reprojeciton Results}
 We report quantitative results in \ref{tab:sailvos_quan}. The fourth line and the fifth line shows the result of the experiments that study the effect of reprojection. These results are achieved by training 25k iterations with a learning rate of $0.0002$ and a batchsize of $8$. Both of these two experiments outperform the MaskJoint baseline on the second line. However, the best Amodal-net on the third line achieves better result than both of them. The difference in performance is due to the diffrence in training parameters, and the fact that the Amodal-net experiments explored more hyperparameters. The Amodal-net experiment that achieved the highest AP used $9$ mask layers, while the reprojection experiments used $4$. Also, Amodal-net experiments jointly trained modal masks, amodal maks and occluded masks, while the reprojection experiments did not due to computation limitations. The accuracy of the model with or without reprojection can probably get higher if hyperparameters \eg learning rate and batchsize are tuned with more experiments. 
 
 \input{tab_quan} 
-[TODO: get the AP partial and heavy]
 
 Comparing the last two rows in \ref{tab:sailvos_quan}, we can see that reprojection performs better in the mask AP metric by $0.1$. However, the difference is not significant, and the training without reprojection preforms better in some other metrics. In general, the two versions achieved similar results as we can see in \ref{fig:ap}. Note that we are discussing the training after 25k iterations in \ref{fig:ap}, \ref{fig:ap_bin}, \ref{fig:ap_box} and \ref{fig:ap_person} not the full 40k iterations. 
 
