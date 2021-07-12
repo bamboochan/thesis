@@ -32,6 +32,7 @@ def feature_reproject(features, depth,rages, device):
 
 def get_reproject_flow(old_mask, depth, rage1, rage2,device, is_mask=False):
   # warp old_mask by reprojection; depth will be interpolated in the size of old_mask
+  # rage matrices transform between world coordinates and NDC
   # return: flow-field
   b,c,h,w = old_mask.shape
   depth = F.interpolate(depth,size=[h,w])
