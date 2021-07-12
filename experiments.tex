@@ -18,27 +18,27 @@ Before adding reprojection to the network, I conducted some sanity check experim
 
 My first experiment is to evaluate the gain on AP from doing reprojection. Here are the quantative results in \tabref{tab:sanity}. The first three lines are from Amodal-net. The last four lines are the evaluation of using groundtruth masks from $t-1$ or $t-2$ as prediction, with or without reprojection. As one would expect, the accuracy of the lines that is using reprojection is higher, confirming our presumption that reprojection should allow us to use 3D and temporal information better. But obviously these lines are using modified versions of groundtruth masks, and hence are not comparable to the first three lines. The final goal of this project would be to incorporate this reprojected information into the training pipeline to improve the numbers in the third line.
 
-My second experiment is training a small network ($1 \times 1$ convolution) on the groundtruth reprojected masks from previous frames. I use one-hot encoding, so each training input has shape $(25*n) \times h \times w$, where $25$ is the number of categories (plus 1 for background) and $n$ is the number of previous masks we passed in the network. The first version I trained has the masks from frames $t,t-1,t-2,t-3$. As one would expect, the model learned to take the groundtruth mask from $t$ directly as output, and achieved perfect accuracy. \ref{fig:w4} shows the weight that the model learned. The x-axis is the the input channels and the y-axis is the output channels. The model correctly learns to use the main diagonal primarily, correponding to using the groundtruth mask from the frame $t$. In the next version, I only passed in groundtruth masks from $t-1,t-2,t-3$ as input. As shown in \ref{fig:w3}, the weights are largest in the three diagonals as one would expect. Out of the three diagonals, the main diagonal is the largest. It is consistent with our expectation that the the most recent mask ($t-1$) is the most valuable. But it is good to see that the model is also using mask from $t-2$ and $t-3$ frames to some extent. This further confirms our presumption that the reprojected masks from previous frames would help with the performance of the model. I also explored how some hyper-parameters impact the training process. Finally, I launched a training with a $3\times 3$ convolutional network with the same parameters. It did not perform too much better than the $1\times 1$ one. 
+My second experiment is training a small network ($1 \times 1$ convolution) on the groundtruth reprojected masks from previous frames. I use one-hot encoding, so each training input has shape $(25\cdot n) \times h \times w$, where $25$ is the number of categories (plus 1 for background) and $n$ is the number of previous masks we passed in the network. The first version I trained has the masks from frames $t,t-1,t-2,t-3$. As one would expect, the model learned to take the groundtruth mask from $t$ directly as output, and achieved perfect accuracy. \figref{fig:w4} shows the weight that the model learned. The x-axis is the the input channels and the y-axis is the output channels. The model correctly learns to use the main diagonal primarily, correponding to using the groundtruth mask from the frame $t$. In the next version, I only passed in groundtruth masks from $t-1,t-2,t-3$ as input. As shown in \figref{fig:w3}, the weights are largest in the three diagonals as one would expect. Out of the three diagonals, the main diagonal is the largest. It is consistent with our expectation that the the most recent mask ($t-1$) is the most valuable. But it is good to see that the model is also using masks from $t-2$ and $t-3$ frames to some extent. This further confirms our presumption that the reprojected masks from previous frames would help with the performance of the model. I also explored how some hyper-parameters impact the training process. Finally, I launched a training with a $3\times 3$ convolutional network with the same parameters. It did not perform too much better than the $1\times 1$ one. 
 
-\ref{tab:sanity} shows the quantitative results of these sanity check experiments. The convolutional networks performs slightly better than directly using the groundtruth $t-1$ mask, which makes sense since that is the most recent mask. The plots \ref{fig:plot1} of the predicted mask also match this.
+\tabref{tab:sanity} shows the quantitative results of these sanity check experiments. The convolutional networks perform slightly better than directly using the groundtruth $t-1$ mask, which makes sense since that is the most recent mask. The plots in  \figref{fig:plot1} of the predicted mask also match this.
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.22]{fig/weights_4.png}
-\caption{Weight that the model learned. Input is gt masks from t,t-1,t-2,t-3}
+\caption{Weight that the model learned. Input is gt masks from $t,t-1,t-2,t-3$. }
 \label{fig:w4}
 \end{figure}
 \begin{figure}
 \centering
 \includegraphics[scale=0.22]{fig/weights_3.png}
-\caption{Weight that the model learned. Input is gt masks from t,t-1,t-2,t-3}
+\caption{Weight that the model learned. Input is gt masks from $t$,$t-1$,$t-2$,$t-3$.}
 \label{fig:w3}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.23]{fig/pred.png}
-\caption{gt mask, t-1 mask, t-2 mask,t-3 mask and predicted mask. The prediction is from 1x1 conv network that is trained without gt}
+\caption{gt mask, $t-1$ mask, $t-2$ mask, $t-3$ mask and predicted mask. The prediction is from $1\times 1$ conv network that is trained without gt.}
 \label{fig:plot1}
 \end{figure}
 
@@ -46,5 +46,5 @@ My second experiment is training a small network ($1 \times 1$ convolution) on t
 
 
 \section{Experiment with Reprojection}
-In the main experiment, I implemented the reprojection in the feature space. As shown in \ref{fig:pipeline}, the main part I added is annotated in red. In the dataloader, I added the depth map of the images and the camera matrices in addition to the images theselves. Then in the network, I added a layer that reproject the feature from one frame to another as in \ref{chp:approach}. In the implementation, I had to change the reprojection code to accomodate reprojection in the feature space instead of for the image directly. Since it is of a lower resolution, I needed to downsample the depth map. I tried a few difference modes of resizing to get the minimum amount of the aliasing effect. In the end I found that just using the nearest performs the best. The results of this experiment are discussed in \ref{chp:res}
+In the main experiment, I implemented the reprojection in the feature space. As shown in \figref{fig:pipeline}, the main part I added is annotated in red. In the dataloader, I added the depth map of the images and the camera matrices in addition to the images theselves. Then in the network, I added a layer that reproject the feature from one frame to another as in Chapter~\ref{chp:approach}. In the implementation, I had to change the reprojection code to accomodate reprojection in the feature space instead of for the image directly. Since it is of a lower resolution, I needed to downsample the depth map. I tried a few difference modes of resizing to get the minimum amount of the aliasing effect. In the end I found that just using the nearest performs the best. The results of this experiment are discussed in Chapter~\ref{chp:res}
 

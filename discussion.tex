@@ -1,6 +1,6 @@
-As we discussed in \ref{chp:res}, the three features we introduced in Amodal-net \ie cascade, Soft NMS and interative mask head all boost the performance of the model. However, reprojection is not as successful as those three features. It would be interesting to discuss what is the reason.
+As we discussed in Chapter~\ref{chp:res}, the three features we introduced in Amodal-net, \ie, cascade, Soft NMS and interative mask head all boost the performance of the model. However, reprojection is not as successful as those three features. It would be interesting to discuss what is the reason.
 
-One reason could be the distribution of objects in SAILVOS dataset. As shown in \ref{fig:sailvos_cls}, person class contribute to the largest number of objects. But objects in person class usually move between frames, which means reprojection will not align it correctly.
+One reason could be the distribution of objects in SAILVOS dataset. As shown in \figref{fig:sailvos_cls}, person class contribute to the largest number of objects. But objects in person class usually move between frames, which means reprojection will not align it perfectly.
 
 \begin{figure}[t]
 \centering
