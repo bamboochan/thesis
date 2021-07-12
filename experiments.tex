@@ -17,7 +17,7 @@ Following Hu~\etal~\cite{hu2019sail}, objects with occlusion rate larger than $7
 We report quantitative results in~\tabref{tab:sailvos_quan}. 
 %On the SAIL-VOS dataset, we 
 % and compared with state-of-the-art method of~\cite{hu2019sail}. 
-All the results are reported using $T = 2$ frames. We also experimented with larger history. However, results did not change compared to using two frames. We suspect that usefulness of optical flow degrades as the history increases. %\as{don't forget to bold all columns}
+In the Amodal-net experiments, optical flow is used to align images in the history. All the results are reported using $T = 2$ frames. We also experimented with larger history. However, results did not change compared to using two frames. We suspect that usefulness of optical flow degrades as the history increases. %\as{don't forget to bold all columns}
 
 As shown in \tabref{tab:sailvos_quan},Amodal-net outperforms baselines~\cite{hu2019sail} by $3.5\%$ AP in the class-specific setting and by $3.6\%$ %{\bf\color{orange}3.6 is right?(40.8 to 43.8) 3.0?}\ray{That's AP50}
 AP in the class-agnostic setting. We also observe gains on the other metrics except for $\text{AP}_{\text{50}}^{\text{H}}$ in the class-agnostic setting. These results validate that the proposed backbone and the box/mask-head tailored for amodal segmentation are effective and improve results.
@@ -35,11 +35,11 @@ In column 4, the segmentations of the laptop and person correctly maintain their
 
 
 Next, we conduct an ablation study to assess the merits of the proposed components.  \tabref{tab:abalation} shows that each of the proposed components leads to improvements in the amodal mask's AP.
-In row 2, we validated that multi-task training with occlusion annotations (\secref{subsec:multi_task_training}) is beneficial. 
+In row 2, we validated that multi-task training with occlusion annotations is beneficial. 
 %In row 2, we observe that using and additional occlusion branch is beneficial. 
 To experiment with different numbers of mask layers, we freeze the box-branch and only train the amodal mask.
-In row 3 and 4, we observe that using nine mask layers achieves the best results and adding more layers doesn't improve further. In row 5, we validated that the use of flow (\secref{sec:temporal}) is effective. 
-In row 6 and 7, we see that the cascade box regression along with Soft-NMS (\secref{sec:bbox}) leads to improvements in box AP. Lastly, in row 8, further refinement with mask iterations (\secref{sec:segm}) also improves the amodal segmentation's accuracy.
+In row 3 and 4, we observe that using nine mask layers achieves the best results and adding more layers doesn't improve further. In row 5, we validated that the use of flow is effective. 
+In row 6 and 7, we see that the cascade box regression along with Soft-NMS leads to improvements in box AP. Lastly, in row 8, further refinement with mask iterations also improves the amodal segmentation's accuracy.
 
 
 
@@ -56,13 +56,13 @@ My second experiment is training a small network (1x1 convolution) on the ground
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.1]{fig/weights_4.png}
+\includegraphics[scale=0.22]{fig/weights_4.png}
 \caption{Weight that the model learned. Input is gt masks from t,t-1,t-2,t-3}
 \label{fig:w4}
 \end{figure}
 \begin{figure}
 \centering
-\includegraphics[scale=0.12]{fig/weights_3.png}
+\includegraphics[scale=0.22]{fig/weights_3.png}
 \caption{Weight that the model learned. Input is gt masks from t,t-1,t-2,t-3}
 \label{fig:w3}
 \end{figure}
@@ -78,7 +78,5 @@ My second experiment is training a small network (1x1 convolution) on the ground
 
 
 \section{Experiment with Reprojection}
-In the main experiment, I implemented the reprojection in feature space. As shown in \ref{fig:pipeline}, the main part I added is annotated in red. In the dataloader, I added the depth map of the images and the camera matrices in addition to the images theselves. Then in the network, I added a layer that reproject the feature from one frame to another as in \ref{chp:approach}. In the implementation, I had to change the reprojection code a little to accomodate reprojection in the feature space instead of image. Since it is of a lower resolution, I needed to downsample the depth map. I tried a few difference modes of resizing to get the minimum amount of the aliasing effect. I found at the end the just using the nearest performs the best. 
-
-The 
+In the main experiment, I implemented the reprojection in feature space. As shown in \ref{fig:pipeline}, the main part I added is annotated in red. In the dataloader, I added the depth map of the images and the camera matrices in addition to the images theselves. Then in the network, I added a layer that reproject the feature from one frame to another as in \ref{chp:approach}. In the implementation, I had to change the reprojection code a little to accomodate reprojection in the feature space instead of image. Since it is of a lower resolution, I needed to downsample the depth map. I tried a few difference modes of resizing to get the minimum amount of the aliasing effect. I found at the end the just using the nearest performs the best. The results of this experiment is discussed in \ref{chp:res}
 
