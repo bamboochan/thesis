@@ -2,24 +2,21 @@
 \begin{table*}[t]
 \centering
 \renewcommand{\arraystretch}{0.95}
-\scalebox{0.8}{
+\scalebox{0.9}{
 \begin{tabular}{@{\extracolsep{\fill}}c|ccccccccc}
 \specialrule{.15em}{.05em}{.05em}
-Row \# & Method &  Occlude & Flow & \# Mask Layers & Cascade & Soft-NMS & Mask Iter. & Box AP & Mask AP\\
+Row \# & Method &  lr & Batchsize &Occlude & Alignment & \# Mask Layers & Amodal feats & Box AP & Mask AP\\
 \hline\hline
 %MaskAmodal~\cite{follmann2019learning} & \xmark & \xmark & 4 & \xmark & \xmark & \xmark & - & 13.0\\ 
 %MaskJoint~\cite{hu2019sail} & \xmark & \xmark & 4 & \xmark & \xmark & \xmark & - & 14.1\\
-1 & MaskJoint~\cite{hu2019sail} & \xmark&  \xmark & 4 & \xmark & \xmark  & \xmark & - & 14.1\\
-2 & Ours & \cmark & \xmark & 4 & \xmark & \xmark  & \xmark & 16.4 & 14.6\\
-\hline 
-3 & Ours & \cmark & \xmark & 9 &\xmark  & \xmark & \xmark & 16.4  & 15.4\\
-4 & Ours & \cmark & \xmark & 10 &\xmark  & \xmark & \xmark &  16.4 & 15.3\\
+1 & MaskJoint~\cite{hu2019sail} & - & - & \xmark&  \xmark & 4 & \xmark & - & 14.1\\
+2 & Ours & - & 16 & \cmark & Flow & 9 &\cmark  &  \bf 19.6 & \bf 17.6\\
 \hline
-5 & Ours & \cmark & \cmark & 9 &\xmark  & \xmark & \xmark &  17.5 & 16.3 \\
-\hline 
-6 & Ours & \cmark & \cmark & 9 &\cmark  & \xmark & \xmark &  18.6 & 16.7 \\
-7 & Ours & \cmark & \cmark & 9 &\cmark  & \cmark & \xmark &   19.6 & 17.3\\
-8 & Ours & \cmark & \cmark & 9 &\cmark  & \cmark & \cmark &  \bf 19.6 & \bf 17.6\\
+3 & Ours & 2e-2 & 8 & \cmark & Reproj & 4 &\cmark  &  12.99 & 12.22 \\
+4 & Ours & 2e-3 & 8 & \cmark & Reproj & 4 &\cmark  &  16.55 & 14.67 \\
+5 & Ours & 6e-3 & 8 & \cmark & Reproj & 4 &\cmark  &   14.93 &  13.35\\
+6 & Ours & 2e-4 & 8 & \cmark & Reproj & 4 &\cmark  &   16.86 & \bf 15.04\\
+7 & Ours & 2e-4 & 8 & \cmark & \xmark & 4 &\cmark  &  \bf 16.91 & 15.01\\
 %\cite{hu2019sail} & \xmark & \xmark & - & 13.0 & - & -\\
 
 %\hline
@@ -34,9 +31,10 @@ Row \# & Method &  Occlude & Flow & \# Mask Layers & Cascade & Soft-NMS & Mask I
 \specialrule{.15em}{.05em}{.05em}
 \end{tabular}}
 \vspace{-0.3cm}
-\caption{Ablation study for each of the proposed components on the SAIL-VOS dataset using the class-specific setting.}
-\label{tab:ablation}
+\caption{Ablation study for hyperparameters in experiments on reprojection. 'Amodal feats' column refers to three features added in Amodal-net: cascade, Soft-NMS and Mask-Iter}
+\label{tab:ablation_reproj}
 \vspace{-0.5cm}
 \end{table*}
-
-
+    
+    
+    

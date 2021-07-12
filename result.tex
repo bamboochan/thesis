@@ -1,12 +1,55 @@
-Training 25k iterations with a learning rate of 0.0002 gives us the following quantative result:
-\input{tab_quan}
+\section{Amodal-net Experiments}
 
-Reprojection achieves better result for small objects, as it achieves $0.2$ AP higher than training without reprojection. But in general, the two versions achieved similar results \ref{fig:ap}. 
+We report quantitative results in~\tabref{tab:sailvos_quan}. 
+%On the SAIL-VOS dataset, we 
+% and compared with state-of-the-art method of~\cite{hu2019sail}. 
+In the Amodal-net experiments, optical flow is used to align images in the history. All the results are reported using $T = 2$ frames. We also experimented with larger history. However, results did not change compared to using two frames. We suspect that usefulness of optical flow degrades as the history increases. %\as{don't forget to bold all columns}
 
-If we look at the metrics per class, we can see that training with reprojection performs better for objects that are small and still \eg box and bin \ref{fig:ap_bin}. But for object that moves \eg person \ref{fig:ap_person}, it performs worse than the training without reprojection. 
+As shown in \tabref{tab:sailvos_quan}, Amodal-net outperforms baselines~\cite{hu2019sail} by $3.5\%$ AP in the class-specific setting and by $3.6\%$ %{\bf\color{orange}3.6 is right?(40.8 to 43.8) 3.0?}\ray{That's AP50}
+AP in the class-agnostic setting. We also observe gains on the other metrics except for $\text{AP}_{\text{50}}^{\text{H}}$ in the class-agnostic setting. These results validate that the proposed backbone and the box/mask-head tailored for amodal segmentation are effective and improve results.
 
-[TODO: exlain more here]
+
+We provide qualitative results in~\figref{fig:qual_result}. Note that our approach successfully predicts the amodal mask despite occlusions. 
+In column 1, half of the person is occluded by a table. The model correctly infers the lower half of the person. In column 2, our approach correctly predicts the overlapping amodal boxes, inferring a car and a person.
+In column 3, we successfully segment  the entire motorcycle, propagating information `through' the person.
+In column 4, the segmentations of the laptop and person correctly maintain their corresponding boundaries.   
+%In contrast, the baseline suffers from duplicate detections, \eg, the second column, and challenges with the amodal segmentation. 
+%For example, 
+%In column three, the motorcycle is not fully segmented, or in column four, where the segmentation of the laptop and person mixes. 
+%\as{make this paragraph stronger; relate it back to the three issues explained in the intro; don't emphasize what goes wrong in prior work but what our method does better; don't trash others, emphasize ours} %\as{order columns (left to right) to match discussion}
+
+
+
+Next, we conduct an ablation study to assess the merits of the proposed components.  \tabref{tab:ablation} shows that each of the proposed components leads to improvements in the amodal mask's AP.
+In row 2, we validated that multi-task training with occlusion annotations is beneficial. 
+%In row 2, we observe that using and additional occlusion branch is beneficial. 
+To experiment with different numbers of mask layers, we freeze the box-branch and only train the amodal mask.
+In row 3 and 4, we observe that using nine mask layers achieves the best results and adding more layers doesn't improve further. In row 5, we validated that the use of flow is effective. 
+In row 6 and 7, we see that the cascade box regression along with Soft-NMS leads to improvements in box AP. Lastly, in row 8, further refinement with mask iterations also improves the amodal segmentation's accuracy.
+
+
+
+\section{Reprojeciton Results}
+We report quantitative results in \ref{tab:sailvos_quan}. The fourth line and the fifth line shows the result of the experiments that study the effect of reprojection. These results are achieved by training 25k iterations with a learning rate of $0.0002$ and a batchsize of $8$. Both of these two experiments outperform the MaskJoint baseline on the second line. However, the best Amodal-net on the third line achieves better result than both of them. The difference in performance is due to the diffrence in training parameters, and the fact that the Amodal-net experiments explored more hyperparameters. The Amodal-net experiment that achieved the highest AP used $9$ mask layers, while the reprojection experiments used $4$. Also, Amodal-net experiments jointly trained modal masks, amodal maks and occluded masks, while the reprojection experiments did not due to computation limitations. The accuracy of the model with or without reprojection can probably get higher if hyperparameters \eg learning rate and batchsize are tuned with more experiments. 
+
+\input{tab_quan} 
+[TODO: get the AP partial and heavy]
+
+Comparing the last two rows in \ref{tab:sailvos_quan}, we can see that reprojection performs better in the mask AP metric by $0.1$. However, the difference is not significant, and the training without reprojection preforms better in some other metrics. In general, the two versions achieved similar results as we can see in \ref{fig:ap}. Note that we are discussing the training after 25k iterations in \ref{fig:ap}, \ref{fig:ap_bin}, \ref{fig:ap_box} and \ref{fig:ap_person} not the full 40k iterations. 
+
+If we look at the metrics per class, we can see that training with reprojection performs better for objects that are static \eg box and bin \ref{fig:ap_bin}. But for object that moves \eg person \ref{fig:ap_person}, it performs worse than the training without reprojection. This obeservation matches the fact that reprojection only considers camera movement and not the object movemtn. In other words, reprojection will only align objects assuming they are still. 
+
+If we look at the performance for different object sizes, the two performs similarly in large and medium objects. But interestingly, reprojection achieves better result for small objects, as it achieves $0.2$ AP higher than training without reprojection. This could be due to the fact that there is a higher percentage of static objects that are small compared to medium and large objects. For example, boxes and bins are usually far away in the scene and thus smaller compared to people.
+
+ 
+
 [TODO: add qualiatative result here]
-[TODO: ablation study for hyperparameters]
+
 \input{fig_ap}
+
+
+\section{Hyperparameter}
+The next step we conducted experiments to tune the hyperparameters. In particular, we launched many experiements with different learning rates. As shown in \ref{tab:ablation_reproj}, we experimented with learning rate from $0.02$ to $2\times 10^{-4}$. We can see that learning rate has a big impact on training. In all the runs, there is a decay of learning rate in the last $5000$ and $2500$ iterations by a factor of $0.1$ and $0.1^2$. Since in the start of training, we are loading the pre-trained weights, the experiments with larger learning rates saw a big regression in the start of the training. Some of them never outperformed the baseline due to the initial decline, which is reported in the first row. On the other hand, using a smaller learning rate means that the model will not change much from its initial state, which implies that the gain in performance will also not be too significant. 
+\input{results/tab_ablation_reproj}
+
  
